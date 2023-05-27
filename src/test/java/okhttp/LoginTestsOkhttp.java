@@ -53,33 +53,33 @@ public class LoginTestsOkhttp {
 
     @Test
     public void loginWrongPassword() throws IOException {
-        AuthRequestDTO auth = AuthRequestDTO.builder().username("ssa@gmail.com").password("Ssa12345$").build();
+        AuthRequestDTO auth = AuthRequestDTO.builder().username("ssa@gmail.com").password("Ssa123").build();
         RequestBody body = RequestBody.create(gson.toJson(auth),JSON);
         Request request = new Request.Builder()
                 .url("https://contactapp-telran-backend.herokuapp.com/v1/user/login/usernamepassword")
                 .post(body)
                 .build();
         Response response = client.newCall(request).execute();
-        Assert.assertTrue(response.isSuccessful());
-        Assert.assertEquals(response.code(), 200);
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.code(), 401);
+        ErrorDTO errorDTO = gson.fromJson(response.body().string(), ErrorDTO.class);
+        Assert.assertEquals(errorDTO.getMessage(), "Login or Password incorrect");
 
-        AuthResponseDTO responseDTO = gson.fromJson(response.body().string(), AuthResponseDTO.class);
-        System.out.println(responseDTO.getToken());
 
     }    @Test
     public void loginUnregistered() throws IOException {
-        AuthRequestDTO auth = AuthRequestDTO.builder().username("ssa@gmail.com").password("Ssa12345$").build();
+        AuthRequestDTO auth = AuthRequestDTO.builder().username("mom@gmail.com").password("Ssa12345$").build();
         RequestBody body = RequestBody.create(gson.toJson(auth),JSON);
         Request request = new Request.Builder()
                 .url("https://contactapp-telran-backend.herokuapp.com/v1/user/login/usernamepassword")
                 .post(body)
                 .build();
         Response response = client.newCall(request).execute();
-        Assert.assertTrue(response.isSuccessful());
-        Assert.assertEquals(response.code(), 200);
+        Assert.assertFalse(response.isSuccessful());
+        Assert.assertEquals(response.code(), 401);
+        ErrorDTO errorDTO = gson.fromJson(response.body().string(), ErrorDTO.class);
+        Assert.assertEquals(errorDTO.getMessage(), "Login or Password incorrect");
 
-        AuthResponseDTO responseDTO = gson.fromJson(response.body().string(), AuthResponseDTO.class);
-        System.out.println(responseDTO.getToken());
 
     }
 }
