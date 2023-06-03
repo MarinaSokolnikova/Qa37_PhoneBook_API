@@ -12,6 +12,8 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 
 import static com.jayway.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 
 public class LoginTestsRA {
     @BeforeMethod
@@ -57,5 +59,23 @@ public class LoginTestsRA {
                 .as(ErrorDTO.class);
 
         Assert.assertEquals(errorDTO.getMessage(), "Login or Password incorrect");
+    }
+
+    @Test
+    public void loginWrongEmailFormat(){
+        AuthRequestDTO auth = AuthRequestDTO.builder().username("ssagmail.com").password("Ssa12345$").build();
+
+        given()
+                .body(auth)
+                .contentType(ContentType.JSON)
+                .when()
+                .post("user/login/usernamepassword")
+                .then()
+                .assertThat().statusCode(401)
+                .assertThat().body("message",containsString("Login or Password incorrect"))
+                .assertThat().body("path", equalTo("/v1/user/login/usernamepassword"));
+
+
+
     }
 }
