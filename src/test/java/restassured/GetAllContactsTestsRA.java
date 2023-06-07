@@ -38,4 +38,9 @@ public class GetAllContactsTestsRA {
             System.out.println("Size of list -->"+list.size());
         }
     }
+
+    @Test
+    public void getAllContactsWrongToken() {
+
+    }
 }
